@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Upload</title>
+	<script type="text/javascript" src="jquery-3.5.1.js"></script>
+</head>
+<body>
+	<form>
+		<input type="file"  id="uploadArquivos" multiple>
+
+		<input type="file" id="filepicker" multiple />
+		<input type="file" id="inputFile">
+		<img src="" id="imagem">
+		<div>
+		  <p>List of selected files:</p>
+		  <ul id="output"></ul>
+		</div>
+		
+	</form>
+
+
+ <script type="text/javascript">
+        $(document).ready(function () {
+       var parentId  = "";
+       var uploadArquivo = $("#uploadArquivos");
+
+	uploadArquivo.on('change', function(e) {
+	  files = e.target.files;
+	  console.log(files);
+	  var formData = new FormData(),
+	    file = [];
+
+	  $.each(files, function(key, val) {
+	    file[key] = val;
+	    console.log("key: "+key+" val: "+val);
+	  });
+
+	  formData.append('file', file);
+	  	alert("file: "+file)
+	  $.ajax({
+	    url: '/content-management/api/v2/documents/upload/publish/'+parentId ,
+	    cache: false,
+	    contentType: false,
+	    processData: false,
+	    data: formData,
+	    type: 'post',
+	    success: function(data) {
+
+	    }
+	  });
+
+	});
+});
+	
+	const output = document.getElementById('output');
+	const filepicker = document.getElementById('filepicker');
+const caminhoCompleto = filepicker.value;
+console.log("caminho "+caminhoCompleto);
+	filepicker.addEventListener('change', (event) => {
+	  const files = event.target.files;
+	  output.textContent = '';
+
+	  for (const file of files) {
+	    const li = document.createElement('li');
+	    li.textContent = file.name;
+	    output.appendChild(li);
+	  }
+})
+        
+
+
+  var input = document.getElementById("inputFile");
+var fReader = new FileReader();
+console.log(document.querySelector('input[type=file]').files[0])
+fReader.readAsDataURL(document.querySelector('input[type=file]').files[0]);
+fReader.onloadend = function(event){
+    var img = document.getElementById("imagem");
+    img.src = event.target.result;
+
+}
+
+
+
+    </script>
+</body>
+</html>
